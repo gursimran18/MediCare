@@ -37,11 +37,13 @@ section{
 }
 
 .btn{
-    display: inline-block;
+    display: block;
     margin-top: 1rem;
     padding:.8rem 3rem;
+    
     border-radius: 100px;
-    background: var(--gradient);
+    background-image: linear-gradient(to right, #2CAFB8, #36cbe9, #5bdffa );
+    background-size: 200%;
     font-size: 1.7rem;
     color:#fff;
     cursor: pointer;

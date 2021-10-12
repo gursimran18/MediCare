@@ -50,20 +50,21 @@ exports.login = async(req,res) => {
     if (!email || !password) {
         return res
             .status(400)
-            .send({ error: "Provide email and password" });
+            .render('login',{ error: "Provide email and password" });
     }
     const user = await User.findOne({ email: req.body.email });
     if (!user)
         return res
             .status(400)
-            .send({ error: "Email or Password is incorrect." });
+            .render('login',{ error: "No such user exists" });
+        
 
     //hash
     const ValidPass = await bcrypt.compare(req.body.password, user.password);
     if (!ValidPass)
-        return res
-            .status(400)
-            .send({ error: "Password is incorrect." });
+    return res
+        .status(400)
+        .render('login',{ error: "Password incorrect" });
     return res
         .status(200)
         .send({ error: null, isdoctor: user.isdoctor, firstname: user.firstname, lastname: user.lastname, email: user.email, _id: user._id });
