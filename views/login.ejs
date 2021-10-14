@@ -46,6 +46,12 @@
 
             <div class="login-inner-content">
 
+                <label for="profile">Profile:</label>
+                    <select id="profile" name="profile">
+                        <option value="1">Doctor</option>
+                        <option value="2">Patient</option>
+                    </select>
+
 
                 <div class="input-div one">
                     <div class="i">
@@ -53,7 +59,7 @@
                     </div>
                     <div class="div">
                         
-                        <input type="text" class="input" placeholder="Email">
+                        <input type="text" class="input" name="email" placeholder="Email">
                     </div>
                 </div>
 
@@ -62,8 +68,7 @@
                         <i class="fas fa-eye" onclick="show()"></i>
                     </div>
                     <div class="div">
-                        
-                        <input id="pswrd" type="password" class="input" placeholder="Password">
+                        <input type="password" name="password" class="input" placeholder="Password">
                     </div>
                 </div>
 
