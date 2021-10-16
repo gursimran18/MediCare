@@ -1,0 +1,123 @@
+<!--Navbar start
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">MediCare</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/add-user">Add User</a>
+                </li>
+                
+                
+        </div>
+    </div>
+</nav>
+<!--Navbar end-->
+
+<header>
+
+    <a href="#" class="logo">MediCare</a>
+
+    <input type="checkbox" id="menu-bar">
+    <label for="menu-bar" class="fas fa-bars"></label>
+    <p class="hello">Welcome Doctor. <%= name%></p>
+    <nav class="navbar">
+       <!-- <a href="/">Home</a> -->
+        <div class="dropdown">
+            <a href="#" onclick="myFunction()" class="dropbtn">Appointments</a>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="#">Allot Appointments</a>
+              <a href="#">Reschedule Appointments</a>
+              <a href="#">Cancel Appointments</a>
+              <a href="#">View Appointments</a>
+              
+            </div>
+          </div>
+        <!--<a href="/searchGenre" class="dropdown" onclick="myFunction()"> Find Doctors</a> -->
+        <a href="#review"> Patient History</a>
+        <a href="#contact">My Profile</a>
+        <a href="/logout">Logout</a>
+    </nav>
+
+    <style>
+    .hello{
+      color: white;
+      text-decoration: bold;
+      padding-top: 16px;
+      font-size: 30px;
+    }
+     /* Dropdown Button */
+    .dropbtn {
+      background-color: none;
+      color: black;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* Dropdown button on hover & focus */
+    .dropbtn:hover, .dropbtn:focus {
+        background-color: #b9c6ce;
+    }
+    
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+    
+    /* Links inside the dropdown */
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {background-color: #ddd}
+    
+    /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+    .show {display:block;}
+    </style>
+
+    <script>
+        function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+}
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+    </script>
+
+</header>

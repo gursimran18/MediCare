@@ -37,14 +37,14 @@ router.get('/Plogin',(req,res)=>{
 router.post('/Plogin',authController.Plogin);
 
 router.get('/D_dashboard',(req,res) =>{
-    res.render('D_dashboard',{
+    res.render('doctors/dashboardDoctor',{
         name: req.user.firstname,
-        speciality: req.user.speciality
+        //speciality: req.user.speciality
     });
 })
 
 router.get('/P_dashboard',(req,res) =>{
-    res.render('P_dashboard',{
+    res.render('patients/dashboardPatient',{
         name: req.user.firstname
     });
 })
