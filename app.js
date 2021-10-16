@@ -11,6 +11,8 @@ require('./Server/config/passport')(passport);
 
 const path = require('path');
 const authRoutes = require('./Server/routes/authRoutes')
+const docRoutes = require('./Server/routes/docRoutes')
+const patientRoutes = require('./Server/routes/patientRoutes')
 app.use(morgan('dev'));
 
 // Middleware to read the body of http post request
@@ -51,6 +53,8 @@ app.use((req,res,next) => {
 
 //specifying routes
 app.use('/',authRoutes);
+app.use('/D_dashboard',docRoutes);
+app.use('/P_dashboard',patientRoutes);
 
 
 
