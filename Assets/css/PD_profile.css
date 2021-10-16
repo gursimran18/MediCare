@@ -1,0 +1,44 @@
+body{
+    padding-top: 70px;
+    margin-top: 20px;
+    background-color: lightgrey;
+}
+
+.profhead{
+    
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 10 px;
+    background-color: #2CAFB8;
+    font-weight: bold;
+    color: black;
+}
+
+.backbtn{
+    margin-top: 25px;
+    font-size: 16px;
+    background-color: cadetblue;
+    
+    color: white;
+    text-transform: none;
+    border-radius: 1px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-decoration: none;
+
+}
+
+.card{
+   
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.content{
+    background-color: #89dce2;
+    background-color: whitesmoke;
+    font-size: 16px;
+}
