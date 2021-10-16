@@ -52,6 +52,10 @@ const patientSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    userType:{
+        type: String,
+        required: true,
+    },
 },{ timestamps: true });
 
 module.exports = mongoose.model("Patients", patientSchema);

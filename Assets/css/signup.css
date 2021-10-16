@@ -19,7 +19,7 @@ a:hover{
 }
 .container{
     width: 100vw;
-    height: 100vh;
+    height: 120vh;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     padding: 0 2rem;

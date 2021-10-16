@@ -35,23 +35,17 @@
 
     <div class="login-content">
 
-        <form action="/login" method="post">
+        <form action="/Plogin" method="post">
 
             <div class="title-container">
                 <h1>Login</h1>
                 <h2>Welcome to MediCare</h2>
-                <p>SignIn to explore!</p>
+                <p>SignIn As Patient!</p>
             </div>
 
+            <%- include ('partials/messages') %>
 
             <div class="login-inner-content">
-
-                <label for="profile">Profile:</label>
-                    <select id="profile" name="profile">
-                        <option value="1">Doctor</option>
-                        <option value="2">Patient</option>
-                    </select>
-
 
                 <div class="input-div one">
                     <div class="i">

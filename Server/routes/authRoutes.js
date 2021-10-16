@@ -2,6 +2,7 @@ const express = require('express');
 const authController = require('../controllers/authController');
 const router = express.Router();
 
+
 //landing page req
 router.get('/',(req,res)=>{
     res.render('index');
@@ -25,10 +26,33 @@ router.get('/Psignup',(req,res)=>{
 router.post('/patientsignup', authController.patientsignUp);
 
 //login request
-router.get('/login',(req,res)=>{
-    res.render('login');
+router.get('/Dlogin',(req,res)=>{
+    res.render('Dlogin');
 })
-router.post('/login',authController.login);
+router.post('/Dlogin',authController.Dlogin);
 
+router.get('/Plogin',(req,res)=>{
+    res.render('Plogin');
+})
+router.post('/Plogin',authController.Plogin);
+
+router.get('/D_dashboard',(req,res) =>{
+    res.render('D_dashboard',{
+        name: req.user.firstname,
+        speciality: req.user.speciality
+    });
+})
+
+router.get('/P_dashboard',(req,res) =>{
+    res.render('P_dashboard',{
+        name: req.user.firstname
+    });
+})
+
+router.get('/logout',(req,res) =>{
+    req.logout();
+    req.flash('success_msg','You are logged out')
+    res.redirect('/Dlogin');
+})
 
 module.exports = router;

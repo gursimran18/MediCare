@@ -28,62 +28,83 @@
 
 
 <div class="container">
-
+    
     <div class="img">
         <img src="../Static/images/Sign in.gif" alt="BG">
     </div>
 
     <div class="signup-content">
-
+        
         <form action="/docsignup" method="post">
-
+            
             <div class="title-container">
                 <h1>Sign Up As Doctor</h1>
             </div>
-
+            <%- include ('partials/messages') %>
 
             <div class="signup-inner-content">
 
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="firstname" placeholder="First Name">
+                        <input type="text" class="input" name="firstname" placeholder="First Name"
+                        value="<%= typeof firstname != 'undefined' ? firstname : '' %>">
                     </div>
                 </div>
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="lastname" placeholder="Last Name">
+                        <input type="text" class="input" name="lastname" placeholder="Last Name"
+                        value="<%= typeof lastname != 'undefined' ? lastname : '' %>">
                     </div>
                 </div>
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="gender" placeholder="Gender">
+                        <input type="text" class="input" name="gender" placeholder="Gender"
+                        value="<%= typeof gender != 'undefined' ? gender : '' %>">
                     </div>
                 </div>
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="age" placeholder="Age">
+                        <input type="text" class="input" name="age" placeholder="Age"
+                        value="<%= typeof age != 'undefined' ? age : '' %>">
                     </div>
                 </div>
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="email" placeholder="Email">
+                        <input type="text" class="input" name="email" placeholder="Email"
+                        value="<%= typeof email != 'undefined' ? email : '' %>">
                     </div>
                 </div>
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="phone" placeholder="Phone">
+                        <input type="text" class="input" name="phone" placeholder="Phone"
+                        value="<%= typeof phone != 'undefined' ? phone : '' %>">
                     </div>
                 </div>
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="pincode" placeholder="Pincode">
+                        <input type="text" class="input" name="pincode" placeholder="Pincode"
+                        value="<%= typeof pincode != 'undefined' ? pincode : '' %>">
+                    </div>
+                </div>
+
+                <div class="input-div one">
+                    <div class="div">
+                        <input type="text" class="input" name="degree" placeholder="Degree Qualification"
+                        value="<%= typeof degree != 'undefined' ? degree : '' %>">
+                    </div>
+                </div>
+
+                <div class="input-div one">
+                    <div class="div">
+                        <input type="text" class="input" name="speciality" placeholder="Your Speciality"
+                        value="<%= typeof speciality != 'undefined' ? speciality : '' %>">
                     </div>
                 </div>
 
@@ -95,13 +116,7 @@
 
                 <div class="input-div one">
                     <div class="div">
-                        <input type="text" class="input" name="degree" placeholder="Degree Qualification">
-                    </div>
-                </div>
-
-                <div class="input-div one">
-                    <div class="div">
-                        <input type="text" class="input" name="speciality" placeholder="Your Speciality">
+                        <input type="password" class="input" name="password2" placeholder="Confirm Password">
                     </div>
                 </div>
 
@@ -110,7 +125,7 @@
             <input type="submit" class="btn" value="Signup">
 
         </form>
-
+        
     </div>
 </div>
 

@@ -59,7 +59,11 @@ const doctorSchema = new mongoose.Schema({
     speciality:{
         type: String,
         required: [true, 'Please provide speciality'],
-    }
+    },
+    userType:{
+        type: String,
+        required: true,
+    },
 },{ timestamps: true });
 
 module.exports = mongoose.model("Doctors", doctorSchema);
