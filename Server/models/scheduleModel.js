@@ -9,7 +9,6 @@ const scheduleSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: [true, 'Please provide email.'],
         validate: [validator.isEmail, 'Please provide a valid email address.']
     },
@@ -24,6 +23,10 @@ const scheduleSchema = new mongoose.Schema({
     end_time: {
         type: String,
         required: false,
+    },
+    mode:{
+        type: String,
+        required: true,
     },
     average_time: {
         type: String,
