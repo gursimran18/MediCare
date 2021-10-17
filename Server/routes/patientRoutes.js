@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Schedule = require("../models/scheduleModel");
 const Doctors = require('../models/doctorModel');
 router.get('',(req,res) =>{
     res.render('patients/dashboardPatient',{
@@ -27,6 +28,17 @@ router.get('/profile',(req,res) =>{
 
     });
 })
+
+
+
+router.get('/book_appoint',(req,res) =>{
+    Schedule.find({}, function(err, schedules) {
+        res.render('patients/book_appoint', {
+            scheduleList: schedules
+        })
+    })
+})
+
 
 router.get('/logout',(req,res) =>{
     req.logout();

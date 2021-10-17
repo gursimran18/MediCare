@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Doctor Name</th>
+            <th scope="col">Qualification</th>
+            <th scope="col">Specialization</th>
+            <th scope="col">Email</th>
+            <th scope="col">Date</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col">Average Consulting Time for each patient</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        <%scheduleList.forEach(schedules => {%>
+            <tr>
+                <th scope="row"><%= email %></th>
+                <td><%= email %></td>
+                <td><%= email %></td>
+                <td><%= email %></td>
+                <td><%= date %></td>
+                <td><%= start_time %></td>
+                <td><%= end_time %></td>
+                <td><%= average_time %></td>
+                <td><%= email %></td>
+               
+            </tr>
+            <%})%>
+        </tbody>
+      </table>
+</body>
+</html>
