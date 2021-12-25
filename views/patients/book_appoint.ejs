@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+ 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
@@ -16,24 +21,29 @@
             <th scope="col">Specialization</th>
             <th scope="col">Email</th>
             <th scope="col">Date</th>
+            <th scope="col">Mode</th>
             <th scope="col">Start Time</th>
             <th scope="col">End Time</th>
-            <th scope="col">Average Consulting Time for each patient</th>
+            <th scope="col">Average Consulting Time </th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-        <%scheduleList.forEach(schedules => {%>
+        <%scheduleList.forEach(result => {%>
             <tr>
-                <th scope="row"><%= email %></th>
-                <td><%= email %></td>
-                <td><%= email %></td>
-                <td><%= email %></td>
-                <td><%= date %></td>
-                <td><%= start_time %></td>
-                <td><%= end_time %></td>
-                <td><%= average_time %></td>
-                <td><%= email %></td>
+                <th scope="row"><%= result.DoctorData[0].firstname %></th>
+                <td><%= result.DoctorData[0].degree %></td>
+                <td><%= result.DoctorData[0].speciality %></td>
+                <td><%= result.email %></td>
+                <td><%= result.date %></td>
+                <td><%=result.mode %></td>
+                <td><%= result.start_time %></td>
+                <td><%= result.end_time %></td>
+                <td><%= result.average_time %></td>
+                <td><button type="button" class="btn btn-success btn-sm"
+                   
+                   onclick="window.location.href = '/P_dashboard/book_appoint/lock_appoint'"
+                  >Book</button></td>
                
             </tr>
             <%})%>
