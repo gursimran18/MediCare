@@ -54,8 +54,8 @@ router.get('/profile',(req,res) =>{
     })
 }) 
 
-    router.get('/lock_appoint',(req,res) =>{
-        Schedule.findById(req.query.scheduleId.toString(),function(err,doc1){
+    router.get('/lock_appoint/:schedule_id',(req,res) =>{
+        Schedule.findById(req.params.schedule_id.toString(),function(err,doc1){
             if (err){
                 console.log(err);
             }

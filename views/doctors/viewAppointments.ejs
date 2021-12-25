@@ -16,34 +16,36 @@
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">Doctor Name</th>
-            <th scope="col">Qualification</th>
-            <th scope="col">Specialization</th>
+            <th scope="col">Patient Name</th>
             <th scope="col">Email</th>
+            <th scope="col">Age</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Height</th>
+            <th scope="col">Weight</th>
+            <th scope="col">Symptoms</th>
             <th scope="col">Date</th>
             <th scope="col">Mode</th>
-            <th scope="col">Start Time</th>
-            <th scope="col">End Time</th>
-            <th scope="col">Average Consulting Time </th>
+            <th scope="col">Time</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-        <%scheduleList.forEach(result => {%>
+        <%appointments.forEach(result => {%>
             <tr>
-                <th scope="row"><%= result.DoctorData[0].firstname %></th>
-                <td><%= result.DoctorData[0].degree %></td>
-                <td><%= result.DoctorData[0].speciality %></td>
-                <td><%= result.email %></std>
-                <td><%= result.date %></td>
-                <td><%=result.mode %></td>
-                <td><%= result.start_time %></td>
-                <td><%= result.end_time %></td>
-                <td><%= result.average_time %></td>
+                <th scope="row"><%= result.PatientData[0].firstname%> <%=result.PatientData[0].lastname%></th>
+                <td><%= result.PatientData[0].email %></td>
+                <td><%= result.PatientData[0].age %></td>
+                <td><%= result.PatientData[0].gender %></td>
+                <td><%= result.patient_height %></td>
+                <td><%= result.patient_weight %></td>
+                <td><%= result.patient_symptoms %></td>
+                <td><%= result.ScheduleData[0].date %></td>
+                <td><%=result.ScheduleData[0].mode %></td>
+                <td><%= result.ScheduleData[0].start_time %>-<%= result.ScheduleData[0].end_time %></td>
                 <td><button type="button" class="btn btn-success btn-sm"
                    
-                   onclick="window.location.href = '/P_dashboard/lock_appoint/<%= result._id %>'"
-                  >Book</button></td>
+                   onclick="window.location.href = '/D_dashboard/cancelAppointment/<%= result._id %>'"
+                  >Cancel</button></td>
                
             </tr>
             <%})%>

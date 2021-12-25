@@ -1,6 +1,8 @@
 const express = require('express');
+var alert=require('alert');
 const router = express.Router();
 const Schedule = require("../models/scheduleModel");
+const lockedSchedule = require("../models/bookedModel");
 
 router.get('',(req,res) =>{
     res.render('doctors/dashboardDoctor',{
@@ -100,6 +102,61 @@ router.post('/scheduleAppointment',async(req,res) => {
               })
               .catch(err => console.log(err));
     }
+})
+
+router.get('/viewAppointments',async(req,res) => {
+    const doc_id=req.user.id;
+    lockedSchedule.aggregate([
+        {
+            "$match":{
+                "doctor_id": doc_id
+            }
+        },
+        {
+            "$lookup":{
+                "let": { "patientObjId": { "$toObjectId": "$patient_id" } },
+          "from":"patients",
+          "pipeline":[
+            {"$match":{"$expr":{"$eq":[ "$_id","$$patientObjId"]}}},
+            {"$project":{"firstname":1,"lastname":1, "email":1, "gender":1,"age":1}}
+          ],
+          "as":"PatientData"
+        }},
+        {
+            "$lookup":{
+                "let": { "schedObjId": { "$toObjectId": "$schedule_id" } },
+          "from":"schedules",
+          "pipeline":[
+            {"$match":{"$expr":{"$eq":[ "$_id","$$schedObjId"]}}},
+            {"$project":{"date":1,"start_time":1, "end_time":1, "mode":1}}
+          ],
+          "as":"ScheduleData"
+        }}
+    ]).exec((err,result) => {
+        if(err){
+            res.send(err)
+        }
+        if(result.size>0){
+            res.render('doctors/viewAppointments',{
+                appointments: result
+             }) 
+        }
+        else{
+            alert("Currently, you dont have any appointments.")
+            res.redirect('/D_dashboard')
+        }
+    })
+})
+
+router.get('/cancelAppointment/:_id',async(req,res)=>{
+    lockedSchedule.findByIdAndDelete(req.params._id.toString(),function(err,docs){
+        if(err){
+            res.send(err)
+        }
+        else{
+            res.redirect('/D_dashboard/viewAppointments')
+        }
+    })
 })
 
 router.get('/logout',(req,res) =>{
