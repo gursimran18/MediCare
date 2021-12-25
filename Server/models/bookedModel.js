@@ -24,7 +24,10 @@ const lockSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-
+    schedule_id: {
+        type: String,
+        required: true,
+    },
     
 },{ timestamps: true });
 

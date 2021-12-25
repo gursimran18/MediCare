@@ -201,18 +201,18 @@
   </head>
   <body>
     <div class="testbox">
-      <form action="/">
+      <form action="/P_dashboard/lockAppoint" method="POST">
         <div class="banner">
           <h1>Confirm Appointment</h1>
         </div>
         <div class="colums">
           <div class="item">
             <label for="fname"> First Name<span>*</span></label>
-            <input id="fname" type="text" name="fname"  value='<%p_fname%>' required/>
+            <input id="fname" type="text" name="fname"  value='<%=p_fname%>' required/>
           </div>
           <div class="item">
             <label for="lname"> Last Name<span>*</span></label>
-            <input id="lname" type="text" name="lname"  value='<%p_lname%>' required/>
+            <input id="lname" type="text" name="lname"  value='<%=p_lname%>' required/>
           </div>
           <div class="item">
             <label for="gender">Gender<span>*</span></label>
@@ -249,37 +249,43 @@
           </div>
           <div class="item">
             <label for="d_fname">Doctor's FirstName<span>*</span></label>
-            <input id="d_fname" type="text"   name="d_fname" required/>
+            <input id="d_fname" type="text"   name="d_fname" 
+            value='<%=d_fname%>' readonly/>
           </div>
           <div class="item">
             <label for="d_lname">Doctor's LastName<span>*</span></label>
-            <input id="d_lname" type="text"   name="d_lname"  required/>
+            <input id="d_lname" type="text"   name="d_lname"  
+            value='<%=d_lname%>' readonly/>
           </div>
           <div class="item">
             <label for="date">Date of Consultation<span>*</span></label>
-            <input id="date" type="text"   name="date"  required/>
+            <input id="date" type="text"   name="date"  
+            value='<%=s_date%>' readonly/>
           </div>
           <div class="item">
             <label for="stime">Start Time<span>*</span></label>
-            <input id="stime" type="text"   name="stime"  required/>
+            <input id="stime" type="text"   name="stime"  
+            value='<%=s_stime%>' readonly/>
           </div>
           <div class="item">
             <label for="etime">End Time<span>*</span></label>
-            <input id="etime" type="text"   name="etime"  required/>
+            <input id="etime" type="text"   name="etime"  
+            value='<%=s_etime%>' readonly/>
           </div>
           <div class="item">
             <label for="mode">Mode of Consultation<span>*</span></label>
-            <input id="mode" type="text"   name="mode"  required/>
+            <input id="mode" type="text"   name="mode"  
+            value='<%=s_mode%>' readonly/>
           </div>
-        
-          
+          <input type="hidden" id="d_id" name="d_id" value='<%=d_id%>'/>
+          <input type="hidden" id="s_id" name="s_id" value='<%=s_id%>'/>
         </div>
        
         <h2>Terms and Conditions</h2>
         <input type="checkbox" name="checkbox1">
         <label>You consent to appear for the scheduled appointment and if under unavoidable circumstances, cancellation is needed, you'd inform the doctor 24hours prior .</label>
         <div class="btn-block">
-          <button type="submit" href="/">Confirm</button>
+          <button type="submit" class="btn btn-primary btn-block">Confirm</button>
         </div>
       </form>
     </div>

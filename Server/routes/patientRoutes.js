@@ -1,11 +1,9 @@
 const express = require('express');
-
+var alert=require('alert');
 const router = express.Router();
-//var ObjectID = require("mongodb").ObjectID;
 const Schedule = require("../models/scheduleModel");
 const doctors = require("../models/doctorModel");
 const lockedSchedule = require("../models/bookedModel");
-//console.log(Doctors.firstname)
 router.get('',(req,res) =>{
     res.render('patients/dashboardPatient',{
         name: req.user.firstname
@@ -13,7 +11,6 @@ router.get('',(req,res) =>{
 })
 
 router.get('/backto_dash',(req,res) =>{
-    //res.render('patients/dashboardPatients');
     res.redirect('/P_dashboard');
 })
 
@@ -33,47 +30,12 @@ router.get('/profile',(req,res) =>{
     });
 })
 
-
-
-/*router.get('/book_appoint',(req,res) =>{
-    Schedule.aggregate([
-        {
-$lookup :
-{
-    from: "Doctors",
-    localfield: "doctor_id" ,
-    foreignField : "_id",
-    as: "D_id"
-}
-
-
-        }], function(err, schedules){
-             if(schedules){
-            res.send({
-                error: false,
-                data: schedules
-            })
-        }
-            res.render('patients/book_appoint',{
-                scheduleList: schedules
-            }) 
-           if(err){
-                res.send(err)
-            }
-        }
-        )
-
-}) */
-
  router.get('/book_appoint',(req,res, next)=>{
     Schedule.aggregate([
-        //{
-            //"$match":ObjectId(doctor_id)},
         {
             "$lookup":{
                 "let": { "docObjId": { "$toObjectId": "$doctor_id" } },
           "from":"doctors",
-         // "let":{"d_id":"$doctor_id"},
           "pipeline":[
             {"$match":{"$expr":{"$eq":[ "$_id","$$docObjId"]}}},
             {"$project":{"firstname":1,"lastname":1, "degree":1, "speciality":1}}
@@ -85,89 +47,69 @@ $lookup :
             res.send(err)
         }
         if(result){
-           console.log(result)
             res.render('patients/book_appoint',{
                scheduleList: result
             }) 
-            //res.send({
-                //error: false,
-                //data: result
-           // })
         }
     })
 }) 
-   /* .exec((err,result) => {
-        if(err){
-            res.send(err)
-        }
-        if(result){
-            res.send({
-                error: false,
-                data: result
-            })
-        }
-    })*/
 
     router.get('/lock_appoint',(req,res) =>{
-        res.render('patients/lockAppoint',{
-           p_id: req.user.id,
-           p_fname: req.user.firstname,
-           p_lname: req.user.lastname,
-           p_gender: req.user.gender,
-           p_age: req.user.age,
-           p_email: req.user.email,
-           p_phone:req.user.phone,
+        Schedule.findById(req.query.scheduleId.toString(),function(err,doc1){
+            if (err){
+                console.log(err);
+            }
+            else{
+                doctors.findById(doc1.doctor_id,function(err,doc2){
+                    if (err){
+                        console.log(err);
+                    }
+                    else{
+                    res.render('patients/lockAppoint',{
+                        d_id:doc2._id.toString(),
+                        d_fname:doc2.firstname,
+                        d_lname:doc2.lastname,
+                        p_fname: req.user.firstname,
+                        p_lname: req.user.lastname,
+                        p_gender: req.user.gender,
+                        p_age: req.user.age,
+                        p_email: req.user.email,
+                        p_phone:req.user.phone,
+                        s_id:doc1._id.toString(),
+                        s_date:doc1.date,
+                        s_stime:doc1.start_time,
+                        s_etime:doc1.end_time,
+                        s_mode:doc1.mode
+                     });
+                    }
+                });
+            }
         });
        
     })
     
 
     router.post('/lockAppoint',async(req,res) => {
-       
-       const patient_id= req.user.id, 
-       patient_symptoms= req.body.symptom,
-       patient_height= req.body.height, 
-       patient_weight= req.body.weight,
-        //change
-         doctor_id = req.user.id,
-    
-       
-      
-             lockedschedule = new lockedSchedule({
-                patient_id: patient_id,
-                 patient_symptoms: patient_symptoms,
-                 patient_height: patient_height, 
-                 patient_weight: patient_weight,
-                doctor_id: doctor_id, 
-                  
-            });
-            lockedschedule
-                  .save()
-                  .then(user => {
-                    req.flash(
-                      'success_msg',
-                      'Your appointment has been confirmed'
-                    );
-                    res.redirect('patients/book_appoint');
-                  })
-                  .catch(err => console.log(err));
+       const p_id= req.user.id;
+       const{symptom, height, weight, d_id,s_id} = req.body;
+        lockedschedule = new lockedSchedule({
+            patient_id: p_id,
+            patient_symptoms: symptom,
+            patient_height: height, 
+            patient_weight: weight,
+            doctor_id: d_id,
+            schedule_id:s_id, 
+              
+        });
+        lockedschedule
+              .save()
+              .then(user => {
+                alert("Your appointment has been confirmed")
+                res.redirect('/P_dashboard/book_appoint');
+              })
+              .catch(err => console.log(err));   
       
     })
-    
-    router.get('/logout',(req,res) =>{
-        req.logout();
-        req.flash('success_msg','You are logged out')
-        res.redirect('/Dlogin');
-    })
-
-
-
-
-
-
-
-
-
 
 
 router.get('/logout',(req,res) =>{
