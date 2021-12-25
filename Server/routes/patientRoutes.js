@@ -1,8 +1,10 @@
 const express = require('express');
+
 const router = express.Router();
 //var ObjectID = require("mongodb").ObjectID;
 const Schedule = require("../models/scheduleModel");
 const doctors = require("../models/doctorModel");
+const lockedSchedule = require("../models/bookedModel");
 //console.log(Doctors.firstname)
 router.get('',(req,res) =>{
     res.render('patients/dashboardPatient',{
@@ -115,36 +117,31 @@ $lookup :
            p_age: req.user.age,
            p_email: req.user.email,
            p_phone:req.user.phone,
-           
-
-
-
         });
-        console.log("hello")
+       
     })
     
 
-    /*router.post('/lockAppointment',async(req,res) => {
-        const id=req.user.id;
-        const name=((req.user.firstname).toString() + (req.user.lastname).toString() );
-        const email=req.user.email;
-        const age=req.user.age;
-        const gender=req.user.gender;
-        const phone=req.user.phone;
-        const{date, start_time, end_time, mode, average_time} = req.body;
+    router.post('/lockAppoint',async(req,res) => {
+       
+       const patient_id= req.user.id, 
+       patient_symptoms= req.body.symptom,
+       patient_height= req.body.height, 
+       patient_weight= req.body.weight,
+        //change
+         doctor_id = req.user.id,
     
        
       
-            const lockschedule = new lockSchedule({
-                doctor_id: id,
-                email: email,
-                date: date.toString(),
-                start_time: start_time.toString(),
-                end_time: end_time.toString(),
-                mode: mode,
-                average_time: average_time,
+             lockedschedule = new lockedSchedule({
+                patient_id: patient_id,
+                 patient_symptoms: patient_symptoms,
+                 patient_height: patient_height, 
+                 patient_weight: patient_weight,
+                doctor_id: doctor_id, 
+                  
             });
-            lockschedule
+            lockedschedule
                   .save()
                   .then(user => {
                     req.flash(
@@ -155,7 +152,7 @@ $lookup :
                   })
                   .catch(err => console.log(err));
       
-    })*/
+    })
     
     router.get('/logout',(req,res) =>{
         req.logout();

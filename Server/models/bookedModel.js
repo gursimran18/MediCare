@@ -7,23 +7,16 @@ const lockSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide patient id.'],
     },
-    patient_name: {
-        type: String,
-        required: [true, 'Please provide patient name.'],
-    },
-    patient_gender: {
+   
+    patient_symptoms: {
         type: String,
         required: true,
     },
-    patient_age: {
+    patient_height: {
         type: String,
         required: true,
     },
-    patient_email: {
-        type: String,
-        required: true,
-    },
-    patient_phone: {
+    patient_weight: {
         type: String,
         required: true,
     },
@@ -32,26 +25,7 @@ const lockSchema = new mongoose.Schema({
         required: true,
     },
 
-    doctor_name: {
-        type: String,
-        required: true,
-    },
-    date:{
-        type: String,
-        required: true,
-    },
-    start_time:{
-        type: String,
-        required: true,
-    },
-    end_time:{
-        type: String,
-        required: true,
-    },
-    mode: {
-        type: String,
-        required: true,
-    },
+    
 },{ timestamps: true });
 
 module.exports = mongoose.model("lockedSchedule", lockSchema);
