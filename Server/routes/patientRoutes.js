@@ -106,11 +106,11 @@ $lookup :
         }
     })*/
 
-    router.get('/P_dashboard/book_appoint/lock_appoint',(req,res) =>{
-
-        res.render('patients/lockAppointment',{
+    router.get('/lock_appoint',(req,res) =>{
+        res.render('patients/lockAppoint',{
            p_id: req.user.id,
-           p_name : req.user.firstname,
+           p_fname: req.user.firstname,
+           p_lname: req.user.lastname,
            p_gender: req.user.gender,
            p_age: req.user.age,
            p_email: req.user.email,
