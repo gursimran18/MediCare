@@ -111,6 +111,9 @@ router.get('/profile',(req,res) =>{
       
     })
 
+    router.get('/joinCall',(req,res) =>{
+        res.render('patients/joinCall')
+    })
 
 router.get('/logout',(req,res) =>{
     req.logout();

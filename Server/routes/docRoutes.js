@@ -136,14 +136,10 @@ router.get('/viewAppointments',async(req,res) => {
         if(err){
             res.send(err)
         }
-        if(result.size>0){
+        else{
             res.render('doctors/viewAppointments',{
                 appointments: result
              }) 
-        }
-        else{
-            alert("Currently, you dont have any appointments.")
-            res.redirect('/D_dashboard')
         }
     })
 })
@@ -157,6 +153,10 @@ router.get('/cancelAppointment/:_id',async(req,res)=>{
             res.redirect('/D_dashboard/viewAppointments')
         }
     })
+})
+
+router.get('/startCall/:_id',(req,res)=>{
+    res.render('doctors/startCall')
 })
 
 router.get('/logout',(req,res) =>{

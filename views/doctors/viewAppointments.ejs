@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Medicare</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
@@ -26,8 +26,10 @@
             <th scope="col">Date</th>
             <th scope="col">Mode</th>
             <th scope="col">Time</th>
-            <th scope="col">Action</th>
           </tr>
+          <!--<tr>
+            <th scope="col">Action</th>
+          </tr>-->
         </thead>
         <tbody>
         <%appointments.forEach(result => {%>
@@ -42,11 +44,20 @@
                 <td><%= result.ScheduleData[0].date %></td>
                 <td><%=result.ScheduleData[0].mode %></td>
                 <td><%= result.ScheduleData[0].start_time %>-<%= result.ScheduleData[0].end_time %></td>
-                <td><button type="button" class="btn btn-success btn-sm"
-                   
-                   onclick="window.location.href = '/D_dashboard/cancelAppointment/<%= result._id %>'"
-                  >Cancel</button></td>
-               
+            </tr>
+            <tr>
+              <th scope="row"><a href="/D_dashboard/cancelAppointment/<%= result._id %>" style="width:100%;display:block;
+                text-align:center;padding:.5em;background-color:#0073e2;color:#fff;border-radius:4px;
+                box-shadow:0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);text-decoration:none">
+                Cancel</a></th>
+               <td ><a href="/D_dashboard/cancelAppointment/<%= result._id %>" style="width:100%;display:block;
+                text-align:center;padding:.5em;background-color:#0073e2;color:#fff;border-radius:4px;
+                box-shadow:0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);text-decoration:none">
+                Delete</a></td>
+               <td ><a href="/D_dashboard/startCall/<%= result._id %>" target="_blank" style="width:100%;display:block;
+               text-align:center;padding:.5em;background-color:#0073e2;color:#fff;border-radius:4px;
+               box-shadow:0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);text-decoration:none">
+               Start Call</a></td>
             </tr>
             <%})%>
         </tbody>
