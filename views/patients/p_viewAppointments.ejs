@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicare</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+    
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Date of Consultation</th>
+            <th scope="col">Mode</th>
+            <th scope="col">Time Slot</th>
+            <th scope="col">Issues</th>
+            <th scope="col">Doctor Name</th>
+            <th scope="col">Speciality</th>
+            <th scope="col">Qualification</th> 
+            <th scope="col"> Doctor's Gender</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Action</th>
+           
+          </tr>
+          <!--<tr>
+            <th scope="col">Action</th>
+          </tr>-->
+        </thead>
+        <tbody>
+        <%appointments.forEach(result => {%>
+            <tr>
+                <th scope="row"> <%= result.ScheduleData[0].date %></th>
+                    <td><%=result.ScheduleData[0].mode %></td>
+                    <td><%= result.ScheduleData[0].start_time %>-<%= result.ScheduleData[0].end_time %></td>
+                    <td><%= result.patient_symptoms %></td>
+                    <td><%= result.DocData[0].firstname%> <%=result.DocData[0].lastname%></td>
+                    <td><%= result.DocData[0].speciality %></td>
+                    <td><%= result.DocData[0].degree %></td>
+                    <td><%= result.DocData[0].gender %></td>
+                    <td><%= result.DocData[0].email %></td>
+                    <td><%= result.DocData[0].phone %></td>
+                    <td><a href="/P_dashboard/p_cancelAppointment/<%= result._id %>" style="width:100%;display:block;
+                        text-align:center;padding:.5em;background-color:#0073e2;color:#fff;border-radius:4px;
+                        box-shadow:0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);text-decoration:none">
+                        Cancel</a></td>
+                        <td><a href="/P_dashboard/joinCall/<%= result._id %>" target="_blank" style="width:100%;display:block;
+                            text-align:center;padding:.5em;background-color:#0073e2;color:#fff;border-radius:4px;
+                            box-shadow:0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);text-decoration:none">
+                            Join Call</a> </td>
+                
+               
+            </tr>
+            
+            <%})%>
+        </tbody>
+      </table>
+</body>
+</html>
