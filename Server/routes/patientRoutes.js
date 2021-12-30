@@ -15,10 +15,9 @@ const doctors = require("../models/doctorModel");
 const lockedSchedule = require("../models/bookedModel");
 const connectDB = require('../database/connection')
 //const conn= connectDB();
-
+const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 router.use(bodyParser.json());
 router.use(methodOverride('_method'));
-
 const mongoURI=process.env.MONGO_URI
 const conn = mongoose.createConnection(mongoURI);
 
@@ -167,18 +166,18 @@ const storage = new GridFsStorage({
 
 
 
-router.get('',(req,res) =>{
+router.get('',ensureAuthenticated,(req,res) =>{
     res.render('patients/dashboardPatient',{
         name: req.user.firstname
     });
 })
 
-router.get('/backto_dash',(req,res) =>{
+router.get('/backto_dash',ensureAuthenticated,(req,res) =>{
     res.redirect('/P_dashboard');
 })
 
 
-router.get('/profile',(req,res) =>{
+router.get('/profile',ensureAuthenticated,(req,res) =>{
     res.render('patients/P_profile',{
 
         firstname: req.user.firstname,
@@ -193,7 +192,7 @@ router.get('/profile',(req,res) =>{
     });
 })
 
-router.get('/p_viewAppointments',async(req,res) => {
+router.get('/p_viewAppointments',ensureAuthenticated,async(req,res) => {
     const pat_id=req.user.id;
     lockedSchedule.aggregate([
         {
@@ -234,7 +233,7 @@ router.get('/p_viewAppointments',async(req,res) => {
     })
 })
 
- router.get('/book_appoint',(req,res, next)=>{
+ router.get('/book_appoint',ensureAuthenticated,(req,res, next)=>{
     Schedule.aggregate([
         {
             "$lookup":{
@@ -258,7 +257,7 @@ router.get('/p_viewAppointments',async(req,res) => {
     })
 }) 
 
-    router.get('/lock_appoint/:schedule_id',(req,res) =>{
+    router.get('/lock_appoint/:schedule_id',ensureAuthenticated,(req,res) =>{
         Schedule.findById(req.params.schedule_id.toString(),function(err,doc1){
             if (err){
                 console.log(err);
@@ -291,35 +290,12 @@ router.get('/p_viewAppointments',async(req,res) => {
         });
        
     })
-    
 
-    router.post('/lockAppoint',async(req,res) => {
-       const p_id= req.user.id;
-       const{symptom, height, weight, d_id,s_id} = req.body;
-        lockedschedule = new lockedSchedule({
-            patient_id: p_id,
-            patient_symptoms: symptom,
-            patient_height: height, 
-            patient_weight: weight,
-            doctor_id: d_id,
-            schedule_id:s_id, 
-              
-        });
-        lockedschedule
-              .save()
-              .then(user => {
-                alert("Your appointment has been confirmed")
-                res.redirect('/P_dashboard/book_appoint');
-              })
-              .catch(err => console.log(err));   
-      
-    })
-
-    router.get('/joinCall/:_id',(req,res) =>{
+    router.get('/joinCall/:_id',ensureAuthenticated,(req,res) =>{
         res.render('patients/joinCall')
     })
 
-    router.get('/p_cancelAppointment/:_id',async(req,res)=>{
+    router.get('/p_cancelAppointment/:_id',ensureAuthenticated,async(req,res)=>{
         lockedSchedule.findByIdAndDelete(req.params._id.toString(),function(err,docs){
             if(err){
                 res.send(err)
@@ -350,12 +326,35 @@ router.get('/logout',(req,res) =>{
     res.redirect('/Plogin');
 })
 
-router.get('/getNearestDoctors',async (req,res)=>{
+
+router.post('/lockAppoint',async(req,res) => {
+  const p_id= req.user.id;
+  const{symptom, height, weight, d_id,s_id} = req.body;
+   lockedschedule = new lockedSchedule({
+       patient_id: p_id,
+       patient_symptoms: symptom,
+       patient_height: height, 
+       patient_weight: weight,
+       doctor_id: d_id,
+       schedule_id:s_id, 
+         
+   });
+   lockedschedule
+         .save()
+         .then(user => {
+           alert("Your appointment has been confirmed")
+           res.redirect('/P_dashboard/book_appoint');
+         })
+         .catch(err => console.log(err));   
+ 
+})
+
+/*router.get('/getNearestDoctors',async (req,res)=>{
     const allDoctors = await Doctors.find();
     console.log(allDoctors);
     res.render('patients/ViewDoctor',{
         doctors : allDoctors
     });
-})
+})*/
 
 module.exports= router;

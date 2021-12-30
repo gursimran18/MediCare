@@ -1,39 +1,38 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 const router = express.Router();
+const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
+
 
 
 //landing page req
-router.get('/',(req,res)=>{
+router.get('/',forwardAuthenticated,(req,res)=>{
     res.render('index');
 })
-
 // Signup request
-router.get('/signup',(req,res)=>{
+router.get('/signup',forwardAuthenticated,(req,res)=>{
     res.render('signup');
 })
-
 //doctor signup request
-router.get('/Dsignup',(req,res)=>{
+router.get('/Dsignup',forwardAuthenticated,(req,res)=>{
     res.render('Dsignup');
 })
-router.post('/docsignup', authController.docsignUp);
-
 //patient signup request
-router.get('/Psignup',(req,res)=>{
+router.get('/Psignup',forwardAuthenticated,(req,res)=>{
     res.render('Psignup');
 })
-router.post('/patientsignup', authController.patientsignUp);
-
-//login request
-router.get('/Dlogin',(req,res)=>{
+//doctor login request
+router.get('/Dlogin',forwardAuthenticated,(req,res)=>{
     res.render('Dlogin');
 })
-router.post('/Dlogin',authController.Dlogin);
-
-router.get('/Plogin',(req,res)=>{
+//patient login request
+router.get('/Plogin',forwardAuthenticated,(req,res)=>{
     res.render('Plogin');
 })
+
+router.post('/docsignup', authController.docsignUp);
+router.post('/patientsignup', authController.patientsignUp);
+router.post('/Dlogin',authController.Dlogin);
 router.post('/Plogin',authController.Plogin);
 
 module.exports = router;
