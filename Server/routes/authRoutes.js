@@ -30,6 +30,13 @@ router.get('/Plogin',forwardAuthenticated,(req,res)=>{
     res.render('Plogin');
 })
 
+router.get('/hangup',(req,res)=>{
+    if(req.user.userType=="1")
+    res.redirect('/D_dashboard/viewAppointments')
+    else
+    res.redirect('/P_dashboard/p_viewAppointments')
+  })
+
 router.post('/docsignup', authController.docsignUp);
 router.post('/patientsignup', authController.patientsignUp);
 router.post('/Dlogin',authController.Dlogin);

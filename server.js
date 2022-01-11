@@ -1,123 +1,93 @@
 // Set the environment variables
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
-const app = require('./app');
-const Socket = require("websocket").server
-const http = require("http")
-
+const express = require('express');
+const morgan = require('morgan');
+const flash=require('connect-flash');
+const session=require('express-session');
+const passport=require('passport');
+const app = express();
+const server = require('http').Server(app); //Because we want to reuse the HTTP server for socket.io
+const io = require('socket.io')(server);
+const {
+    ExpressPeerServer
+  } = require('peer');
+const peerServer = ExpressPeerServer(server, {
+    debug: true
+  });
 //connect the database
 const connectDB = require('./Server/database/connection')
 connectDB();
 
 const hostname = process.env.SERVER_HOSTNAME;
 const port = process.env.SERVER_PORT || 3000;
+//passport config
+require('./Server/config/passport')(passport);
+const path = require('path');
+const authRoutes = require('./Server/routes/authRoutes')
+const docRoutes = require('./Server/routes/docRoutes')
+const patientRoutes = require('./Server/routes/patientRoutes')
+app.use(morgan('dev'));
 
-// Start the server
-const server = app.listen(port, hostname, () => {
-    console.log(`Server started on port ${port}.`);
+// Middleware to read the body of http post request
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
+
+//set view path 
+app.set("view engine","ejs");
+app.set('views', path.join(__dirname, 'views'));
+app.use('/css',express.static(path.resolve(__dirname,"assets/css")))
+app.use('/js',express.static(path.resolve(__dirname,"assets/js")))
+app.use("/static", express.static('static'));
+
+//express session
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  }));
+
+  //passport middleware
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+
+//connect flash  
+app.use(flash());
+
+//global vars
+app.use((req,res,next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
 });
 
+//specifying routes
+app.use('/',authRoutes);
+app.use('/D_dashboard',docRoutes);
+app.use('/P_dashboard',patientRoutes);
+app.use('/peerjs', peerServer);
 
-const webSocket = new Socket({ httpServer: server })
-
-let users = []
-
-webSocket.on('request', (req) => {
-    const connection = req.accept()
-
-    connection.on('message', (message) => {
-        const data = JSON.parse(message.utf8Data)
-
-        const user = findUser(data.username)
-
-        switch(data.type) {
-            case "store_user":
-
-                if (user != null) {
-                    return
-                }
-
-                const newUser = {
-                     conn: connection,
-                     username: data.username
-                }
-
-                users.push(newUser)
-                console.log(newUser.username)
-                break
-            case "store_offer":
-                if (user == null)
-                    return
-                user.offer = data.offer
-                break
-            
-            case "store_candidate":
-                if (user == null) {
-                    return
-                }
-                if (user.candidates == null)
-                    user.candidates = []
-                
-                user.candidates.push(data.candidate)
-                break
-            case "send_answer":
-                if (user == null) {
-                    return
-                }
-
-                sendData({
-                    type: "answer",
-                    answer: data.answer
-                }, user.conn)
-                break
-            case "send_candidate":
-                if (user == null) {
-                    return
-                }
-
-                sendData({
-                    type: "candidate",
-                    candidate: data.candidate
-                }, user.conn)
-                break
-            case "join_call":
-                if (user == null) {
-                    return
-                }
-
-                sendData({
-                    type: "offer",
-                    offer: user.offer
-                }, connection)
-                
-                user.candidates.forEach(candidate => {
-                    sendData({
-                        type: "candidate",
-                        candidate: candidate
-                    }, connection)
-                })
-
-                break
-        }
+io.on('connection', function(socket) {
+    socket.on('join-room', (roomId, userId) => {
+      socket.join(roomId)
+      socket.to(roomId).emit('user-connected', userId);
+      // messages
+      socket.on('message', (message) => {
+        //send message to the same room
+        io.to(roomId).emit('createMessage', message)
+    }); 
+  
+      socket.on('disconnect', () => {
+        socket.to(roomId).emit('user-disconnected', userId)
+      })
     })
+  })
 
-    connection.on('close', (reason, description) => {
-        users.forEach(user => {
-            if (user.conn == connection) {
-                users.splice(users.indexOf(user), 1)
-                return
-            }
-        })
-    })
-})
-
-function sendData(data, conn) {
-    conn.send(JSON.stringify(data))
-}
-
-function findUser(username) {
-    for (let i = 0;i < users.length;i++) {
-        if (users[i].username == username)
-            return users[i]
-    }
-}
+// Start the server
+server.listen(port,hostname, () => {
+    console.log(`Server started on port ${port}.`);
+});

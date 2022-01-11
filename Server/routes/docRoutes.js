@@ -3,28 +3,51 @@ var alert=require('alert');
 const router = express.Router();
 const Schedule = require("../models/scheduleModel");
 const lockedSchedule = require("../models/bookedModel");
+const Patient = require("../models/patientModel");
 const nodemailer= require('nodemailer');
 const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
-
+//const server= require("../../server")
+const {
+    v4: uuidV4
+  } = require('uuid');
+  const {
+    validate: uuidValidate
+  } = require('uuid');
+  
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // true for 465, false for other ports
+    //service: "gmail",
+    auth: {
+        user: 'goyal2000yashashvi@gmail.com', // generated ethereal user
+        pass: 'dmbrsnjgippcklvx'  // generated ethereal password
+    },
+    tls:{
+      rejectUnauthorized:false
+    }
+  });
 
 router.get('',ensureAuthenticated,(req,res) =>{
     res.render('doctors/dashboardDoctor',{
         name: req.user.firstname,
-        //speciality: req.user.speciality
+        title: "Dashboard | "
     });
 })
 
 router.get('/profile',ensureAuthenticated,(req,res) =>{
     res.render('doctors/D_profile',{
         firstname: req.user.firstname,
-                lastname: req.user.lastname,
-                gender: req.user.gender,
-                age: req.user.age,
-                email: req.user.email,
-                phone: req.user.phone,
-                pincode: req.user.pincode,
-                degree: req.user.degree,
-                speciality: req.user.speciality
+        lastname: req.user.lastname,
+        gender: req.user.gender,
+        age: req.user.age,
+        email: req.user.email,
+        phone: req.user.phone,
+        pincode: req.user.pincode,
+        degree: req.user.degree,
+        speciality: req.user.speciality,
+        title: "Profile | "
     });
 })
 
@@ -34,7 +57,8 @@ router.get('/backto_dash',ensureAuthenticated,(req,res) =>{
 
 router.get('/scheduleAppointment',ensureAuthenticated,(req,res) =>{
     res.render('doctors/scheduleAppointment',{
-        name:req.user.firstname
+        name:req.user.firstname,
+        title: "Add Schedule | "
     });
 })
 
@@ -72,7 +96,8 @@ router.get('/viewAppointments',ensureAuthenticated,async(req,res) => {
         }
         else{
             res.render('doctors/viewAppointments',{
-                appointments: result
+                appointments: result,
+                title: "Appointments | "
              }) 
         }
     })
@@ -100,21 +125,6 @@ router.get('/cancelAppointment/:_id',ensureAuthenticated,async(req,res)=>{
                     <h1>Appointment Cancelled</h1>
                     <h3>Details</h3>
                     <p>Your appointment with Dr. ${doc_name} on ${doc3.date} has been cancelled.</p>`;
-                
-                  // create reusable transporter object using the default SMTP transport
-                  let transporter = nodemailer.createTransport({
-                    host: 'smtp.gmail.com',
-                    port: 465,
-                    secure: true, // true for 465, false for other ports
-                    //service: "gmail",
-                    auth: {
-                        user: 'goyal2000yashashvi@gmail.com', // generated ethereal user
-                        pass: 'dmbrsnjgippcklvx'  // generated ethereal password
-                    },
-                    tls:{
-                      rejectUnauthorized:false
-                    }
-                  });
                 
                   // setup email data with unicode symbols
                   let mailOptions = {
@@ -151,9 +161,31 @@ router.get('/deleteAppointment/:_id',ensureAuthenticated,async(req,res)=>{
     })
 })
 
-router.get('/startCall/:_id',ensureAuthenticated,(req,res)=>{
-    res.render('doctors/startCall')
+router.get('/startCall/:s_id',ensureAuthenticated,(req,res)=>{
+    res.redirect(`/D_dashboard/startCall/${req.params.s_id}/${uuidV4()}`)
 })
+
+router.get('/startCall/:s_id/:m_id',ensureAuthenticated,(req,res)=>{
+    if(uuidValidate(req.params.m_id)){
+        res.render('doctors/startCall',{
+            name:req.user.firstname,
+            lastname: req.user.lastname,
+            meetId:req.params.m_id,
+            s_id:req.params.s_id,
+            title: "Start Call | "
+        });
+    }else{
+        res.redirect(`D_dashboard/startcall/${req.params.s_id}/${uuidV4()}`)
+    }
+})
+
+router.get('/hangup',ensureAuthenticated,(req,res)=>{
+    if(req.user.userType=="1"){
+        res.redirect('D_dashboard/viewAppointments')
+    }else{
+        res.redirect('P_dashboard/p_viewAppointments')
+    }
+  })
 
 router.get('/logout',(req,res) =>{
     req.logout();
@@ -228,6 +260,76 @@ router.post('/scheduleAppointment',async(req,res) => {
               })
               .catch(err => console.log(err));
     }
+})
+
+router.post('/startCall/:s_id/:m_id',(req,res)=>{
+    let meetId = req.params.m_id;
+    let s_id = req.params.s_id;
+    lockedSchedule.findById(s_id.toString(),function(err,sched){
+        if(err){
+            res.send(err)
+        }else{
+            Patient.findById(sched.patient_id,function(err,patient){
+                if(err){
+                    res.send(err)
+                }else{
+                    var doc_name=req.user.firstname+" "+req.user.lastname;
+                    const output = `
+                    <h1>Video Consultation Started</h1>
+                    <h3>Details</h3>
+                    <p>Doctor: ${doc_name}<br>
+                    Symptoms: ${sched.patient_symptoms}<br>
+                    Call ID: ${meetId}</p>`;
+                
+                  // setup email data with unicode symbols
+                  let mailOptions = {
+                     // from: '"Nodemailer Contact" <your@email.com>', // sender address
+                      to: patient.email, // list of receivers
+                      subject: 'Video Consultation', // Subject line
+                      html: output // html body
+                  };
+                
+                  // send mail with defined transport object
+                  transporter.sendMail(mailOptions, (error, info) => {
+                      if (error) {
+                          return console.log(error);
+                      }
+                  });
+                  if (uuidValidate(meetId)) { //validates if used a proper uuidV4
+                    let userName = req.body.name;
+                    let video = req.body.video;
+                    let audio = req.body.audio;
+                    if (video == 'on') {
+                      video = true;
+                    } else {
+                      video = false;
+                    }
+                    if (audio == 'on') {
+                      audio = true;
+                    } else {
+                      audio = false;
+                    }
+                    if (!userName) {
+                      userName = 'Host'
+                    }
+                    res.render('call', {
+                      name: req.user.firstname,
+                      roomId: meetId,
+                      title: '',
+                      chats: [],
+                      userName: userName,
+                      video: video,
+                      audio: audio,
+                      title: "Call | ",
+                      userType: req.user.userType
+                    })
+                  } else {
+                    res.redirect(`/D_dashboard/startCall/${s_id}`)
+                  }
+                }
+            })
+        }
+    })
 })
 
 module.exports= router;

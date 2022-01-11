@@ -3,9 +3,7 @@ const morgan = require('morgan');
 const flash=require('connect-flash');
 const session=require('express-session');
 const passport=require('passport');
-
 const app = express();
-
 //passport config
 require('./Server/config/passport')(passport);
 
@@ -55,8 +53,6 @@ app.use((req,res,next) => {
 app.use('/',authRoutes);
 app.use('/D_dashboard',docRoutes);
 app.use('/P_dashboard',patientRoutes);
-
-
 
 app.use('*', (req, res) => {
     res.status(404).send('This route is not defined!');

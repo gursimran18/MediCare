@@ -20,6 +20,12 @@ router.use(bodyParser.json());
 router.use(methodOverride('_method'));
 const mongoURI=process.env.MONGO_URI
 const conn = mongoose.createConnection(mongoURI);
+const {
+  v4: uuidV4
+} = require('uuid');
+const {
+  validate: uuidValidate
+} = require('uuid');
 
 // Init gfs
 let gfs;
@@ -225,7 +231,6 @@ router.get('/p_viewAppointments',ensureAuthenticated,async(req,res) => {
             res.send(err)
         }
         else{
-            console.log(result)
             res.render('patients/p_viewAppointments',{
                 appointments: result
              }) 
@@ -291,8 +296,12 @@ router.get('/p_viewAppointments',ensureAuthenticated,async(req,res) => {
        
     })
 
-    router.get('/joinCall/:_id',ensureAuthenticated,(req,res) =>{
-        res.render('patients/joinCall')
+    router.get('/joinCall',ensureAuthenticated,(req,res) =>{
+        res.render('patients/joinCall',{
+          name: req.user.firstname,
+          lastname: req.user.lastname,
+          title: "Call | "
+        })
     })
 
     router.get('/p_cancelAppointment/:_id',ensureAuthenticated,async(req,res)=>{
@@ -347,6 +356,41 @@ router.post('/lockAppoint',async(req,res) => {
          })
          .catch(err => console.log(err));   
  
+})
+
+router.post('/joinCall',(req,res)=>{
+  let meetId=req.body.meetId.toString().toLowerCase();
+  if (uuidValidate(meetId)) { //validates if used a proper uuidV4
+    let userName = req.body.name;
+    let video = req.body.video;
+    let audio = req.body.audio;
+    if (video == 'on') {
+      video = true;
+    } else {
+      video = false;
+    }
+    if (audio == 'on') {
+      audio = true;
+    } else {
+      audio = false;
+    }
+    if (!userName) {
+      userName = 'Host'
+    }
+    res.render('call', {
+      name: req.user.firstname,
+      roomId: meetId,
+      title: '',
+      chats: [],
+      userName: userName,
+      video: video,
+      audio: audio,
+      title: "Call | ",
+      userType: req.user.userType
+    })
+  } else {
+    res.redirect('/P_dashboard/joinCall')
+  }
 })
 
 /*router.get('/getNearestDoctors',async (req,res)=>{
